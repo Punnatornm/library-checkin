@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Library Check-in</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <h2>กำลังโหลด...</h2>
+  <script>
+    async function main() {
+      await liff.init({ liffId: "YOUR_LIFF_ID" });
+
+      const profile = await liff.getProfile();
+      const uid = liff.getContext().userId;
+      const urlParams = new URLSearchParams(window.location.search);
+      const action = urlParams.get("action") || "เข้า";
+
+      fetch("YOUR_GOOGLE_SCRIPT_URL", {
+        method: "POST",
+        body: JSON.stringify({
+          name: profile.displayName,
+          uid: uid,
+          action: action
+        })
+      }).then(() => {
+        document.body.innerHTML = "<h2>✅ บันทึกการ " + action + " สำเร็จ</h2>";
+        setTimeout(() => liff.closeWindow(), 2000);
+      });
+    }
+
+    main();
+  </script>
+</body>
+</html>
